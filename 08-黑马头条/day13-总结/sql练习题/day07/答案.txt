@@ -1,0 +1,78 @@
+-- 学号   英语   数学    语文
+--  1       89    90       99
+--  2       80    89       86
+--  3       65    88       45
+
+-- 行转列  参考 https://blog.csdn.net/Writing_the_future/article/details/82735062
+--方式一   case when then end
+SELECT sno,
+sum(case class when 'english' then score ELSE 0 END) AS '英语',
+sum(case class when 'math' then score ELSE 0 END) AS '数学',
+sum(case class when 'chinese' then score ELSE 0 END) AS '语文'
+from t_sc
+GROUP BY sno
+
+--方式二 select子查询
+SELECT distinct t.sno,
+(SELECT score FROM t_sc e WHERE e.sno=t.sno AND e.class='english') AS '英语',
+(SELECT score FROM t_sc e WHERE e.sno=t.sno AND e.class='math') AS '数学',
+(SELECT score FROM t_sc e WHERE e.sno=t.sno AND e.class='chinese') AS '语文'
+FROM t_sc t
+
+
+
+
+
+-- 2  if 和case when then end
+
+SELECT pid, 
+SUM(IF(`sid`='1',pnum,0)) AS S1ID, 
+SUM(IF(`sid`='2',pnum,0)) AS S2ID, 
+SUM(IF(`sid`='3',pnum,0)) AS S3ID
+FROM a
+GROUP BY pid
+
+SELECT pid,
+max(case when sid=1 then pnum ELSE 0 END) AS S1ID,
+max(case when sid=2 then pnum ELSE 0 END) AS S2ID,
+max(case when sid=3 then pnum ELSE 0 END) AS S3ID
+FROM a
+GROUP BY pid
+    
+-- 3
+-- 3.1
+SELECT teacher_code,WEEK, COUNT(*) AS num
+FROM t5_teachercourse 
+GROUP BY teacher_code,week
+
+-- 3.2
+
+SELECT tmp.teacher_code,
+max(case when tmp.WEEK=1 then tmp.num ELSE '' END) AS '星期一',
+max(case when tmp.WEEK=2 then tmp.num ELSE '' END) AS '星期二',
+max(case when tmp.WEEK=3 then tmp.num ELSE '' END) AS '星期三'
+
+from
+(
+SELECT teacher_code,WEEK, COUNT(*) AS num
+FROM t5_teachercourse 
+GROUP BY teacher_code,WEEK
+) tmp
+GROUP BY tmp.teacher_code
+
+
+-- 使用if函数
+SELECT tmp.teacher_code,
+max(if(tmp.week=1, tmp.num, '')) AS '星期一',
+max(if(tmp.week=2, tmp.num, '')) AS '星期二',
+max(if(tmp.week=3, tmp.num, '')) AS '星期三'
+from
+(
+SELECT teacher_code,WEEK, COUNT(*) AS num
+FROM t5_teachercourse 
+GROUP BY teacher_code,WEEK
+) tmp
+GROUP BY tmp.teacher_code
+
+
+

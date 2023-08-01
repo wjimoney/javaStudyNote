@@ -1,0 +1,16 @@
+package com.heima.behavior;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+//SpringBoot自动配置：引入Mp坐标，就必须配置jdbc url
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableDiscoveryClient
+public class BehaviorApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BehaviorApplication.class,args);
+    }
+}

@@ -1,0 +1,113 @@
+-- 1 隐士内连接  取交集
+SELECT * 
+FROM t2_stu s,
+t2_cls c
+WHERE s.cid = c.cid;
+
+-- 显示内连接
+SELECT * FROM
+t2_stu s JOIN t2_cls c ON s.cid=c.cid;
+
+ --左外连接  所有的学生全显示，右边有对应班级显示班级  没有班级显示null
+SELECT * FROM
+t2_stu s left JOIN t2_cls c ON s.cid=c.cid;
+
+-- 右外连接  显示所有的班级， 班级中没有对应的学生  显示null
+SELECT * FROM  
+t2_stu s right JOIN t2_cls c ON s.cid=c.cid;
+
+
+-- 2
+SELECT * 
+FROM t2_stu s,
+t2_cls c
+WHERE s.cid = c.cid
+AND c.cname='一班';
+
+SELECT * FROM
+t2_stu s JOIN t2_cls c ON s.cid=c.cid
+WHERE c.cname='一班';
+
+
+SELECT * FROM
+t2_stu s left JOIN t2_cls c ON s.cid=c.cid
+WHERE c.cname='一班';
+SELECT * FROM  
+t2_stu s right JOIN t2_cls c ON s.cid=c.cid
+WHERE c.cname='一班';
+
+-- 3
+SELECT c.cname, COUNT(*)
+FROM t2_stu s,
+t2_cls c
+WHERE s.cid = c.cid
+GROUP BY c.cname
+HAVING COUNT(*) >1;
+
+
+
+
+
+-- 1
+
+SELECT s1.sno FROM 
+t5_sc s1,
+t5_sc s2
+WHERE s1.cno=1
+AND s2.cno=2
+AND s1.sno =s2.sno
+AND s1.score>s2.score;
+
+
+-- 2 查询平均成绩大于60分的同学学号及平均成绩
+SELECT  s.sno,s.sname,AVG(sc.score) FROM
+t5_student s,
+t5_course c,
+t5_sc sc
+WHERE s.sno=sc.sno
+AND c.cno=sc.cno
+GROUP BY s.sno,s.sname
+HAVING  AVG(sc.score) >80
+
+
+-- 3查询所有同学的学号，姓名 选课数量，总成绩
+SELECT  s.sno,s.sname,COUNT(*), SUM(sc.score) FROM
+t5_student s,
+t5_course c,
+t5_sc sc
+WHERE s.sno=sc.sno
+AND c.cno=sc.cno
+GROUP BY s.sno,s.sname
+
+
+-- 4 查询没有学过 叶平老师 课同学 学号 姓名
+SELECT * FROM t5_student 
+WHERE sno NOT IN
+(
+SELECT s.sno FROM
+t5_student s,
+t5_course c,
+t5_sc sc,
+t5_teacher t
+WHERE s.sno=sc.sno
+AND c.cno=sc.cno
+AND t.tno=c.tno
+AND t.tname='叶平'
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

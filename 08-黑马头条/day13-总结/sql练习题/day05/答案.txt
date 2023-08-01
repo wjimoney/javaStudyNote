@@ -1,0 +1,47 @@
+-- 1 每门课程都大于65分的学生姓名
+SELECT NAME, MIN(score) 
+FROM t_stu
+GROUP BY NAME
+HAVING MIN(score) >65
+
+
+-- 2 平均分最高的学生姓名
+SELECT NAME, AVG(score) 
+FROM t_stu
+GROUP by name
+HAVING AVG(score)
+=
+(
+SELECT AVG(score)
+FROM t_stu
+GROUP BY NAME
+ORDER BY AVG(score) DESC
+LIMIT 1
+)
+
+
+-- 单科成绩最高的学生姓名
+-- 方式一 from子查询
+SELECT * 
+FROM t_stu s,
+(
+SELECT kecheng,MAX(score) AS maxscore
+FROM t_stu
+GROUP BY kecheng
+) tmp
+WHERE s.kecheng = tmp.kecheng
+AND  s.score = tmp.maxscore
+
+-- 方式二  in多值情况
+SELECT * FROM t_stu
+WHERE  
+(kecheng, score)
+in
+(
+SELECT kecheng,MAX(score) AS maxscore
+FROM t_stu
+GROUP BY kecheng
+)
+
+
+

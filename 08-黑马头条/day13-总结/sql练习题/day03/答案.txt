@@ -1,0 +1,58 @@
+
+-- 1 列出员工人数大于等于50人的部门 所属的所有男性人员
+-- groupby  分组函数使用时， select后面出现的列，要么出现在groupby后面，要么被聚合函数包括  mysql8及以上版本
+-- where 是对原表数据做筛选     having是对查询结果做筛选
+SELECT * FROM user_info
+WHERE depart in
+(
+SELECT depart
+FROM  user_info
+GROUP BY depart
+HAVING COUNT(*)>1
+)
+AND sex ='男'
+
+
+-- 2 列出生日在本月 且入职超过三年 员工
+SELECT NOW()
+SELECT CURRENT_DATE()
+SELECT CURDATE()
+SELECT MONTH(CURDATE())
+
+SELECT year('2019-10-30')
+SELECT year(CURDATE())
+SELECT day(CURDATE())
+
+
+
+SELECT year(CURDATE())  -  year('2019-10-30') #此种计算相差年数 不准确
+-- select  timestampdiff（year，CURRENT_DATE，BIRTH_DT）
+SELECT  TIMESTAMPDIFF(YEAR, '2018-10-25', CURDATE() )
+
+
+
+
+-- 生日  birthday
+-- 最终sql
+SELECT * FROM user_info 
+WHERE month(brithday) = MONTH(CURDATE())
+AND TIMESTAMPDIFF(YEAR, jobdate, CURDATE()) >=3;
+
+
+-- 3.如果每个人月薪 为基础薪资 + 入职月数 *10    计算本月全公司应发工资总额
+
+
+-- 计算本月每个员工 工资（基础薪资 + 入职月数 *10 ）
+SELECT t.NAME,  t.PRIMONTH + TIMESTAMPDIFF(MONTH, jobdate, CURDATE()) *10
+ FROM user_info t
+
+--  计算本月全公司应发工资总额
+SELECT 
+SUM( t.PRIMONTH + TIMESTAMPDIFF(MONTH, jobdate, CURDATE()) *10) AS total
+ FROM user_info t
+
+
+
+
+
+

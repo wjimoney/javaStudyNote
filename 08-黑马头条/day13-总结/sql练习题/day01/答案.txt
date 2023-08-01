@@ -1,0 +1,140 @@
+﻿-- 1 insert into table(xxx,xxx) values(xxx, xxx)
+-- 2
+UPDATE student SET sage=sage+2 WHERE sname LIKE '张%' AND sstate = 2;
+
+-- 3
+SELECT COUNT(*) FROM student 
+WHERE sage BETWEEN 15 AND 20
+AND ssex ='女'
+AND sstate=1;
+
+-- 4 隐式内连接
+SELECT c.* from
+student s,
+course c,
+sc sc
+WHERE s.sno=sc.sno
+AND c.cno=sc.cno
+AND s.sname='王五'
+
+--显示内连接
+SELECT c.* FROM
+student s 
+JOIN sc sc ON s.sno=sc.sno
+JOIN course c ON c.cno = sc.cno
+AND s.sname='王五'
+
+
+
+-- 5 where对原表数据做筛选  having是对select结果做筛选
+SELECT s.sno,s.sname, AVG(sc.score)  from
+student s,
+course c,
+sc sc
+WHERE s.sno=sc.sno
+AND c.cno=sc.cno
+AND c.cstate=1
+GROUP BY s.sno,s.sname
+HAVING  AVG(sc.score)>90
+
+
+-- 6 查询语文比英语成绩高的学生的学号
+
+--方式一
+SELECT * FROM
+(SELECT * FROM sc WHERE cno=1001) tmp1 ,
+(SELECT * FROM sc WHERE cno=1002) tmp2
+WHERE tmp1.sno =tmp2.sno
+AND tmp1.score > tmp2.score
+
+
+-- 方式二
+SELECT sc1.sno FROM 
+sc sc1,
+sc sc2
+WHERE sc1.cno=1001
+AND sc2.cno=1002
+AND sc1.sno=sc2.sno
+AND sc1.score>sc2.score
+
+
+
+
+
+
+
+
+
+
+
+
+-- 1 查询重名的同学
+SELECT NAME, COUNT(*) FROM
+t_student 
+GROUP BY NAME
+HAVING COUNT(*)>1
+
+
+
+SELECT * FROM t_student 
+WHERE NAME IN
+(
+SELECT NAME FROM
+t_student 
+GROUP BY NAME
+HAVING COUNT(*)>1
+)
+-- 2 查询每班每科的平均分
+
+SELECT t.class, m.sub, AVG(m.mark) FROM 
+t_student t,
+t_mark m
+WHERE t.code=m.code
+GROUP BY t.class, m.sub
+
+
+-- 3 查询每班每科分数最高的同学  学科 分数
+SELECT t.class, m.sub, max(m.mark) FROM 
+t_student t,
+t_mark m
+WHERE t.code=m.code
+GROUP BY t.class, m.sub
+
+
+SELECT t.class, t.code,t.name, m.sub, m.mark FROM
+t_student t,
+t_mark m,
+(
+SELECT t.class, m.sub, max(m.mark) AS maxmark FROM 
+t_student t,
+t_mark m
+WHERE t.code=m.code
+GROUP BY t.class, m.sub
+) tmp
+
+WHERE t.code=m.code
+AND tmp.class=t.class
+AND tmp.sub=m.sub
+AND tmp.maxmark=m.mark
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

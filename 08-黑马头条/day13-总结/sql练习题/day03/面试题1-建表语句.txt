@@ -1,0 +1,35 @@
+
+
+CREATE TABLE user_info(
+
+
+id INT PRIMARY KEY AUTO_INCREMENT,	-- id
+	
+	NAME VARCHAR(30),	-- 姓名	
+	sex  VARCHAR(5),    -- 性别
+	DEPART VARCHAR(30), -- 部门
+	brithday DATE,
+	JOBDATE DATE,
+	PRIMONTH DOUBLE -- 工资
+	-- CONSTRAINT ut_fk1 FOREIGN KEY (uid) REFERENCES travel_form(id)
+
+
+);
+
+CREATE TABLE travel_form(
+
+id INT PRIMARY KEY AUTO_INCREMENT,	-- 主键
+	EMPID INT,    -- 外键字段
+	STDATE DATE,
+	EDDATE DATE,
+	PAYDAY DATE,
+	CONSTRAINT ut_fk1 FOREIGN KEY (EMPID) REFERENCES user_info(id)
+
+
+);
+
+INSERT INTO user_info VALUES (NULL,'张三','男','财务部','1981-1-1','2010-3-5',4500);
+
+
+
+INSERT INTO travel_form VALUES (NULL,1,'2012-10-1','2012-10-5',120);

@@ -1,0 +1,81 @@
+1、java集合
+参考：https://blog.csdn.net/weixin_43721056/article/details/114372967
+list 单列集合  有序可重复 
+	linklist 基于链表 查询慢 增删改快
+	arraylist 基于数组 查询快 增删改慢
+	vector 线程安全
+set 单列集合  无序不重复
+	hashset 无序
+	treeset 有序
+map 双列集合
+	hashmap key可以为null但是只能有一个为null 
+	hashtable key和value都不能为null 线程安全
+	treemap 可以按key或者value排序
+
+
+
+2、用过哪些设计模式、什么场合下用的
+单例、策略（项目四中）
+单例模式
+1.构造方法私有化
+2.提供一个私有的静态的当前类的实例
+3.提供一个公开的静态的返回当前实例的方法
+
+
+
+
+
+3、如何评估并发
+参考：https://blog.csdn.net/weixin_36016949/article/details/122106267
+解决：缓存、集群、拉长活动时长、减少页面加载时间。。。
+
+
+4、sql题
+
+
+-- 1.  今天  第一次打卡 大于8:30  小于10:30  算迟到
+SELECT CURDATE();
+
+SELECT NAME, MIN(time)
+FROM t_checkwork
+WHERE DATE=CURDATE()
+GROUP BY name
+HAVING MIN(TIME) BETWEEN '08:30' AND '10:30'
+
+
+-- 2. 
+--每个员工在 10月份 每天第一次打卡时间
+SELECT NAME,DATE,MIN(time)
+FROM t_checkwork 
+WHERE  DATE BETWEEN '2022-10-01' AND '2022-10-30'
+GROUP BY NAME,date
+
+
+
+--每个员工在 10月份 每天第一次打卡时间  并且迟到了
+SELECT NAME,DATE,MIN(time)
+FROM t_checkwork 
+WHERE  DATE BETWEEN '2022-10-01' AND '2022-10-30'
+GROUP BY NAME,DATE
+having MIN(TIME) BETWEEN '08:30' AND '10:30'
+
+
+
+
+
+--每个员工在 10月份 迟到的次数
+SELECT tmp.name,COUNT(*)
+from
+(
+SELECT NAME,DATE,MIN(time)
+FROM t_checkwork 
+WHERE  DATE BETWEEN '2022-10-01' AND '2022-10-30'
+GROUP BY NAME,DATE
+having MIN(TIME) BETWEEN '08:30' AND '10:30'
+) tmp
+GROUP BY tmp.name
+ORDER BY COUNT(*) DESC
+LIMIT 1
+
+
+

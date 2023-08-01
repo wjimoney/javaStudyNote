@@ -1,0 +1,5 @@
+1、删除重名的同学
+
+2、删除重名的同学，但保留code最大的
+
+3、如何通过sql将t_student 表中 class  code name 三列复制到别的表

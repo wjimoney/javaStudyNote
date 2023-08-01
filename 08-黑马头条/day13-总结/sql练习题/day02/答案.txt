@@ -1,0 +1,80 @@
+
+-- 1、删除重名的同学
+-- mysql中select出来的结果 不能直接作为update delete的条件   
+-- 可以在select结果外 在括一层select * from   同时起别名
+DELETE FROM t_student 
+WHERE NAME IN
+(
+	SELECT * from
+	(
+	SELECT NAME
+	FROM t_student
+	GROUP BY NAME
+	HAVING COUNT(*)>1
+	) aaa
+)
+
+
+-- 2、删除重名的同学，但保留code最小的
+--方式一
+DELETE FROM t_student 
+WHERE CODE NOT IN
+(
+	SELECT * from
+	(
+	SELECT min(code)
+	FROM t_student
+	GROUP BY NAME
+	) abc
+) 
+
+-- 方式二
+
+SELECT * FROM
+t_student t1,
+t_student t2
+WHERE t1.name=t2.name
+AND t1.code>t2.code
+
+
+-- 保留最小
+DELETE t1 FROM
+t_student t1,
+t_student t2
+WHERE t1.name=t2.name
+AND t1.code>t2.code
+
+-- 保留最大
+DELETE t2 FROM
+t_student t1,
+t_student t2
+WHERE t1.name=t2.name
+AND t1.code>t2.code
+
+
+
+
+-- 3、如何通过sql将t_student 表中 class  code name 三列复制到别的表
+-- 方式一
+-- insert into table2(c1,c2,c3) select c1, c2, c3 from table1 where  xxxxxx
+--（1）要求目标表Table2和源表Table1必须存在，并且字段相应也必须存在
+--（2）注意Table2的主键约束，如果Table2有主键而且不为空，则 field1， field2…中必须包括主键
+--（3）注意语法，不要加values，和插入一条数据的sql混了
+
+INSERT INTO t_student2(class, CODE, NAME) SELECT class, CODE, NAME FROM t_student
+
+
+-- 方式二
+-- SELECT  INTO FROM语句
+-- 语句形式为：SELECT vale1, value2 into Table2 from Table1
+-- 要求目标表Table2不存在，因为在插入时会自动创建表Table2，并将Table1中指定字段数据复制到Table2中。
+
+-- mysql不支持        oracle sqlsever支持
+-- SELECT class,CODE,name INTO t_student3 FROM t_student
+
+
+-- mysql提供另外一种写法
+-- 语法： create table select from
+CREATE TABLE t_student3 SELECT class, CODE, NAME FROM t_student
+
+
