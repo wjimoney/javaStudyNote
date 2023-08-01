@@ -1,0 +1,32 @@
+server:
+  port: 80
+spring:
+  rabbitmq:
+    host: 192.168.200.130
+    port: 5672
+    virtual-host: /
+    username: itcast
+    password: 123321
+  cloud:
+    nacos:
+      server-addr: localhost:8848 # nacos地址
+  application:
+    name: orderservice
+  datasource:
+    url: jdbc:mysql://localhost:3306/hmall?useSSL=false&characterEncoding=UTF8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis-plus:
+  type-aliases-package: com.hmall.order.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      update-strategy: not_null
+      id-type: auto
+logging:
+  level:
+    com.hmall: debug
+  pattern:
+    dateformat: HH:mm:ss:SSS
